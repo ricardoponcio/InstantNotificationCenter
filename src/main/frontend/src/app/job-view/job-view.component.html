@@ -1,0 +1,34 @@
+<div class="card">
+    <h5 class="card-header position-relative">
+        {{ job.name }}
+        <p class="position-absolute top-50 end-0 translate-middle-y w-50 pe-2 text-end text-truncate fs-6">
+            {{ job.getInfoAlert() }}
+            <i-bs [style.color]="job.getHex()" [name]="job.getIconState()" class="ps-2"></i-bs>
+        </p>
+    </h5>
+    <div class="card-body">
+        <p><b>Description:</b> {{ job.description }}</p>
+        <p><b>Group:</b> {{ job.group }}</p>
+        <div class="progress upper-margin" *ngIf="!job.finished">
+            <progressbar class="progress-striped active" [value]="job.percent"><i>{{ job.percent }}%</i></progressbar>
+        </div>
+
+        <div class="row upper-margin">
+            <div class="col col-sm-2">
+                <button type="button" class="btn btn-primary w-100 mw-100 text-truncate"
+                    (click)="job.collapseDetail=!job.collapseDetail" [attr.aria-expanded]="!job.collapseDetail"
+                    aria-controls="collapseBasic" [disabled]="!job.logs">Show log
+                </button>
+            </div>
+            <div class="col position-relative">
+                <p *ngIf="!job.logs" class="position-absolute top-50 start-0 translate-middle-y w-100">No one log sent!
+                </p>
+            </div>
+        </div>
+        <div id="collapseBasic" [collapse]="job.collapseDetail" [isAnimated]="true">
+            <div class="well well-lg card card-block card-header upper-margin">
+                <p *ngFor="let log of job.logs" class="text-break">{{ log }}</p>
+            </div>
+        </div>
+    </div>
+</div>

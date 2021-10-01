@@ -1,0 +1,19 @@
+<div class="alert alert-primary" role="alert">
+    Systema em testes!
+</div>
+
+<h3 class="upper-margin">Unfinished Jobs</h3>
+<ng-container *ngFor="let job of filterJobs(false); let index = index; let size = count">
+    <div class="mt-2" [ngClass]="{ 'mb-3': index == (size - 1) }">
+        <app-job-view [job]="job"></app-job-view>
+    </div>
+</ng-container>
+
+<hr class="upper-margin">
+
+<h3 class="upper-margin">Finished Jobs</h3>
+<ng-container *ngFor="let job of filterJobs(true); let index = index; let size = count">
+    <div class="mt-2" [ngClass]="{ 'mb-3': index == (size - 1) }">
+        <app-job-view [job]="job"></app-job-view>
+    </div>
+</ng-container>
