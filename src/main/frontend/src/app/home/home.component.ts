@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProgressbarConfig } from 'ngx-bootstrap/progressbar';
 
 import { Job } from '../dto/Job';
+import { JobService } from '../services/job.service';
 
 export function getProgressbarConfig(): ProgressbarConfig {
   return Object.assign(new ProgressbarConfig(), { animate: true, striped: true });
@@ -16,44 +17,20 @@ export function getProgressbarConfig(): ProgressbarConfig {
 export class HomeComponent implements OnInit {
 
   jobs: Job[] = [];
+  loading: boolean = false;
 
-  constructor() { }
+  constructor(private jobService: JobService) { }
 
   ngOnInit(): void {
-    let job = new Job();
-    job.name = 'Minecraft Backup';
-    job.description = 'Minecraft daily backup 4am.';
-    job.group = 'Backups';
-    job.percent = 72;
-    job.logs = [
-      'Volume exists!',
-      'Doing the backup...'
-    ];
-    this.jobs.push(job);
-
-    job = new Job();
-    job.name = 'Team Speak 3 Backup';
-    job.description = 'Team Speak daily backup 4am.';
-    job.group = 'Backups';
-    job.finished = true;
-    job.status = 'ERROR';
-    this.jobs.push(job);
-
-    job = new Job();
-    job.name = 'Team Speak 4 Backup';
-    job.description = 'Team Speak daily backup 4am.';
-    job.group = 'Backups';
-    job.finished = true;
-    job.status = 'EXPIRED';
-    this.jobs.push(job);
-
-    job = new Job();
-    job.name = 'Team Speak 5 Backup';
-    job.description = 'Team Speak daily backup 4am.';
-    job.group = 'Backups';
-    job.finished = true;
-    job.status = 'SUCCESS';
-    this.jobs.push(job);
+    this.loading = true;
+    this.jobService.listJobs()
+      .then(jobs => {
+        this.jobs = jobs;
+        this.loading = false;
+      }).catch(err => {
+        console.log(err);
+        this.loading = false;
+      });
   }
 
   filterJobs = (finished: boolean): Job[] => {

@@ -1,12 +1,10 @@
 import { IconName, IconNamesEnum } from "ngx-bootstrap-icons";
+import { Group, JobUpdate } from "./";
 
 export class Job {
 
     name !: string;
     description !: string;
-    group !: string;
-    percent !: number;
-    logs !: string[];
     
     startDate !: Date;
     endDate !: Date;
@@ -15,6 +13,9 @@ export class Job {
     finished !: boolean;
     status !: string;
     resultMessage !: string;
+
+    group !: Group;
+    updates !: JobUpdate[];
 
     collapseDetail: boolean = true;
 
@@ -64,6 +65,16 @@ export class Job {
         if (this.status == 'ERROR') return IconNamesEnum.XCircle;
         if (this.status == 'EXPIRED') return IconNamesEnum.ExclamationCircle;
         return IconNamesEnum.QuestionCircle;
+    }
+
+    getPercent = () : number => {
+        if (this.updates.filter(o => o.percent).length == 0)
+            return 100;
+        return Math.max.apply(Math, this.updates.map(o => o.percent));
+    }
+
+    getLogs = () : string[] => {
+        return this.updates.filter(o => o.log).map(o => o.log);
     }
 
 }

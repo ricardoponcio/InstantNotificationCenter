@@ -1,6 +1,7 @@
 package dev.poncio.SystemApps.InstantNotificationCenter.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -60,13 +62,16 @@ public class Job {
     private String resultMessage;
 
     @JoinColumn(name = "group", referencedColumnName = "id")
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Group group;
 
     @JsonIgnore
     @JoinColumn(name = "user", referencedColumnName = "id")
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private User user;
+
+    @OneToMany(mappedBy = "job")
+    private List<JobUpdate> updates;
 
     public static enum JobStatus {
         SUCCESS, ERROR, EXPIRED, RUNNING

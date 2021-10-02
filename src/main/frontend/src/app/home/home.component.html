@@ -1,3 +1,7 @@
+<div class="alert alert-danger" role="alert" *ngIf="!jobs || jobs.length == 0">
+    No one job found!
+</div>
+
 <div class="alert alert-primary" role="alert">
     Systema em testes!
 </div>
@@ -17,3 +21,5 @@
         <app-job-view [job]="job"></app-job-view>
     </div>
 </ng-container>
+
+<app-loading [isLoading]="loading"></app-loading>
