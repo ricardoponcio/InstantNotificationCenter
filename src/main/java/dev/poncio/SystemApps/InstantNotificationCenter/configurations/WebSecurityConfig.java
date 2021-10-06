@@ -38,6 +38,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         "/actuator", "/actuator/*", "/actuator/**", "/loggers", "/loggers/**", "/metrics", "/metrics/**", "/health",
         "/health/**",
         // other public endpoints of your API may be appended to this array
+
+		// -- Frontend
+		"/", "/home","/pictureCheckCode","/include/**",
+		"/css/**","/icons/**","/images/**","/js/**","/layer/**",
+		"/*.js", "/*.css", "/assets/i18n/**", "/*.ico",
+		//
+
     };
 
     @Autowired
@@ -86,7 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
 	protected CorsConfigurationSource corsConfigurationSource() {
 		final CorsConfiguration configuration = new CorsConfiguration();
-		List<String> allowedOrigins = Arrays.asList("http://localhost:4200/");
+		List<String> allowedOrigins = Arrays.asList("http://localhost:4200/", "http://localhost:4049/");
 		configuration.setAllowedOrigins(allowedOrigins);
 		configuration.setAllowedOriginPatterns(allowedOrigins);
 		configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));

@@ -1,0 +1,14 @@
+{
+    "select": "Seleccionar idioma",
+    "job": "Trabajo",
+    "jobs.running": "Trabajos en Ejecución",
+    "jobs.finished": "Trabajos Terminados",
+    "jobs.unfinished": "Trabajos Inacabados",
+    "login": {
+        "login": "Login",
+        "username": "Usuario",
+        "password": "Contraseña",
+        "submit": "Entrar",
+        "register": "Registrarse"
+    }
+}

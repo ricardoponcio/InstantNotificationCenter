@@ -1,0 +1,14 @@
+{
+    "select": "Select language",
+    "job": "Job",
+    "jobs.running": "Running Jobs",
+    "jobs.finished": "Finished Jobs",
+    "jobs.unfinished": "Unfinished Jobs",
+    "login": {
+        "login": "Login",
+        "username": "Username",
+        "password": "Password",
+        "submit": "Login",
+        "register": "Register"
+    }
+}

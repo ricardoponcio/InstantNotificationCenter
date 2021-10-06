@@ -25,7 +25,10 @@ export class HomeComponent implements OnInit {
     this.loading = true;
     this.jobService.listJobs()
       .then(jobs => {
-        this.jobs = jobs;
+        this.jobs = jobs.map(job => {
+          job.collapseDetail = true;
+          return job;
+        });
         this.loading = false;
       }).catch(err => {
         console.log(err);

@@ -1,4 +1,8 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<div class="my-overlay" *ngIf="showOverlay">
+    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="authService.isLoggedIn()">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">InstantNotificationCenter</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -14,8 +18,21 @@
         </div>
     </div>
 </nav>
+
 <div class="content">
     <div class="container upper-margin">
         <router-outlet></router-outlet>
     </div>
 </div>
+
+<footer>
+    <label class="lang">
+        {{ ('select' | translate) + ':' }}
+        <select #langSelect (change)="translate.use(langSelect.value)" class="lang-select">
+            <option *ngFor="let lang of translate.getLangs()" [value]="lang"
+                [selected]="lang === translate.currentLang">
+                {{ langFullName(lang) }}
+            </option>
+        </select>
+    </label>
+</footer>
