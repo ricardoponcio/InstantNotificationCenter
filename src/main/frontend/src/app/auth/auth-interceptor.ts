@@ -18,6 +18,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private iso8601 = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/;
 
   constructor(public lang: LangUtils,
+    private authService: AuthService,
     private router: Router) { }
 
   intercept(req: HttpRequest<any>,
@@ -28,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
       headers: req.headers.set("Accept-Language", this.lang.transformLang())
     });
 
-    const idToken = localStorage.getItem("id_token");
+    const idToken = this.authService.getToken();
     if (idToken) {
       cloned = cloned.clone({
         headers: req.headers.set("Authorization",

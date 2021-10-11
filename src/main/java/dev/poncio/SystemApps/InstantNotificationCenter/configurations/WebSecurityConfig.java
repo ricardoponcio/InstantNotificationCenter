@@ -42,10 +42,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// -- Frontend
 		"/", "/home","/pictureCheckCode","/include/**",
 		"/css/**","/icons/**","/images/**","/js/**","/layer/**",
-		"/*.js", "/*.css", "/assets/i18n/**", "/*.ico",
+		"/*.js", "/*.css", "/assets/**", "/*.ico",
+		"/socket", "/socket/**",
 		//
 
     };
+
+	public static final String[] ALLOWED_ORIGINS = {
+		"http://localhost:4200/", "http://localhost:4049/"
+	};
 
     @Autowired
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -93,7 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
 	protected CorsConfigurationSource corsConfigurationSource() {
 		final CorsConfiguration configuration = new CorsConfiguration();
-		List<String> allowedOrigins = Arrays.asList("http://localhost:4200/", "http://localhost:4049/");
+		List<String> allowedOrigins = Arrays.asList(WebSecurityConfig.ALLOWED_ORIGINS);
 		configuration.setAllowedOrigins(allowedOrigins);
 		configuration.setAllowedOriginPatterns(allowedOrigins);
 		configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));

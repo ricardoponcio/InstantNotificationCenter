@@ -30,9 +30,9 @@ import { ConvertDatePipe } from './utils/pipe/convert-date.pipe';
 import { registerLocaleData } from '@angular/common';
 import { LangUtils } from './utils/lang.utils';
 
-registerLocaleData(localePt);
-registerLocaleData(localeEn);
-registerLocaleData(localeEs);
+// registerLocaleData(localePt);
+// registerLocaleData(localeEn);
+// registerLocaleData(localeEs);
 
 @NgModule({
   declarations: [

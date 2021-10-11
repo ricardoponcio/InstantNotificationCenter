@@ -17,11 +17,17 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "JOB_UPDATE")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class JobUpdate {
     
     @Id
@@ -33,7 +39,8 @@ public class JobUpdate {
 
     @Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE", nullable = false)
-	private Date date;
+    @Builder.Default
+	private Date date = new Date();
 
     @Column(name = "PERCENT", nullable = true)
     private Integer percent;

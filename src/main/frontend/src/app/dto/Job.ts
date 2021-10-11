@@ -2,6 +2,7 @@ import { Group, JobUpdate } from "./";
 
 export class Job {
 
+    id !: number;
     name !: string;
     description !: string;
     

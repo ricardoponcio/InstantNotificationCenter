@@ -1,8 +1,10 @@
 package dev.poncio.SystemApps.InstantNotificationCenter.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,10 +29,9 @@ import lombok.Setter;
 @Data
 @Entity
 @Table(name = "JOB")
-public class Job {
+public class Job implements Serializable {
     
     @Id
-    @JsonIgnore
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "job_id_seq")
 	@SequenceGenerator(name = "job_id_seq", sequenceName = "job_id_seq", allocationSize = 1)
 	@Column(name = "id")
@@ -70,7 +71,7 @@ public class Job {
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private User user;
 
-    @OneToMany(mappedBy = "job")
+    @OneToMany(mappedBy = "job", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobUpdate> updates;
 
     public static enum JobStatus {

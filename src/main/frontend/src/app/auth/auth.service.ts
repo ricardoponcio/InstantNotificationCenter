@@ -46,4 +46,8 @@ export class AuthService {
     localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()));
   }
 
+  getToken = () => {
+    return localStorage.getItem("id_token");
+  }
+
 }
