@@ -45,14 +45,14 @@ public class Job implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "START_DATE", nullable = false)
-	private Date startDate;
+	private Date startDate = new Date();
 
     @Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "END_DATE", nullable = true)
 	private Date endDate;
 
     @Column(name = "FINISHED", nullable = false)
-    private Boolean finished;
+    private Boolean finished = Boolean.FALSE;
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -62,12 +62,12 @@ public class Job implements Serializable {
     @Column(name = "RESULT_MESSAGE", nullable = true)
     private String resultMessage;
 
-    @JoinColumn(name = "group", referencedColumnName = "id")
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "`group`", referencedColumnName = "id")
+	@ManyToOne(optional = true, fetch = FetchType.EAGER)
 	private Group group;
 
     @JsonIgnore
-    @JoinColumn(name = "user", referencedColumnName = "id")
+    @JoinColumn(name = "`user`", referencedColumnName = "id")
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private User user;
 

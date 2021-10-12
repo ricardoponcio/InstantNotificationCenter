@@ -53,4 +53,8 @@ public class JobUpdate {
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private Job job;
 
+    @JoinColumn(name = "secrets", referencedColumnName = "id")
+	@ManyToOne(optional = true, fetch = FetchType.EAGER)
+	private Secrets secrets;
+    
 }

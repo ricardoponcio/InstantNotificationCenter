@@ -10,5 +10,9 @@
         "password": "Password",
         "submit": "Login",
         "register": "Register"
+    },
+    "generic": {
+        "indeterminate": "Indeterminate",
+        "and-others": "and other(s)"
     }
 }

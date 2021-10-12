@@ -1,5 +1,7 @@
 package dev.poncio.SystemApps.InstantNotificationCenter.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -36,12 +40,21 @@ public class Secrets {
     @Column(name = "SECRET", nullable = false)
     private String secret;
 
+    @Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "DATE_START", nullable = false)
+	private Date dateStart = new Date();
+
+    @Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "DATE_END", nullable = true)
+	private Date dateEnd;
+
+    @JsonIgnore
     @Column(name = "ACTIVE", nullable = false)
     private Boolean active;
 
     @JsonIgnore
-    @JoinColumn(name = "user", referencedColumnName = "id")
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "`user`", referencedColumnName = "id")
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private User user;
 
 }

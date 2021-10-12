@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProgressbarConfig } from 'ngx-bootstrap/progressbar';
+import { ProgressbarConfig, ProgressbarType } from 'ngx-bootstrap/progressbar';
 import { AuthService } from '../auth/auth.service';
 
 import { Job } from '../dto/Job';
@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
           job.collapseDetail = true;
           return job;
         });
+        console.log(this.jobs);
         this.loading = false;
       }).catch(err => {
         console.log(err);
@@ -53,7 +54,7 @@ export class HomeComponent implements OnInit {
     return this.jobs
       .sort((a, b) => {
         if (!a || !a.startDate || !b || !b.startDate) return 0;
-        return b.startDate.getTime() - a.startDate.getTime()
+        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
       })
       .filter(job => job.finished == finished || (!finished && !job.finished));
   }
@@ -64,7 +65,12 @@ export class HomeComponent implements OnInit {
       jobMessage.collapseDetail = true;
       var index = this.jobs.map(job => job.id).indexOf(jobMessage.id);
       if (index != -1) {
-        this.jobs[index].updates = jobMessage.updates;
+        if (jobMessage.status != this.jobs[index].status) {
+          jobMessage.collapseDetail = true;  
+        } else {
+          jobMessage.collapseDetail = this.jobs[index].collapseDetail;
+        }
+        this.jobs[index] = jobMessage;
       } else {
         this.jobs.push(jobMessage);
       }

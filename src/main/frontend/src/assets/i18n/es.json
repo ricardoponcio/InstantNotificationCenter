@@ -10,5 +10,9 @@
         "password": "Contraseña",
         "submit": "Entrar",
         "register": "Registrarse"
+    },
+    "generic": {
+        "indeterminate": "Indeterminado",
+        "and-others": "y otro(s)"
     }
 }

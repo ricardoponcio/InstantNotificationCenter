@@ -1,6 +1,8 @@
 package dev.poncio.SystemApps.InstantNotificationCenter.filters;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -9,16 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.ExpiredJwtException;
-
-import dev.poncio.SystemApps.InstantNotificationCenter.utils.JwtTokenUtil;
+import dev.poncio.SystemApps.InstantNotificationCenter.entities.Secrets;
+import dev.poncio.SystemApps.InstantNotificationCenter.services.SecretsService;
 import dev.poncio.SystemApps.InstantNotificationCenter.services.UserService;
+import dev.poncio.SystemApps.InstantNotificationCenter.utils.JwtTokenUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -29,19 +33,35 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserService jwtUserDetailsService;
 
+	@Autowired
+	private SecretsService secretsService;
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws ServletException, IOException {		
+			throws ServletException, IOException {
 		response.setHeader("X-Frame-Options", "SAMEORIGIN");
-		final String requestTokenHeader = request.getHeader("Authorization");
 
+		final String requestTokenHeader = request.getHeader("Authorization");
+		if (requestTokenHeader != null && !requestTokenHeader.trim().isEmpty()) {
+			processBearerView(request, requestTokenHeader);
+		}
+
+		final String requestTokenSdk = request.getHeader("SDK-Auth");
+		if (requestTokenSdk != null && !requestTokenSdk.trim().isEmpty()) {
+			processTokenSdk(request, requestTokenSdk);
+		}
+
+		chain.doFilter(request, response);
+	}
+
+	private void processBearerView(HttpServletRequest request, String authTokenBearer) {
 		String username = null;
 		String jwtToken = null;
 		// JWT Token is in the form "Bearer token". Remove Bearer word and get
 		// only the Token
-		logger.debug("JWT Received: " + requestTokenHeader);
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			jwtToken = requestTokenHeader.substring(7);
+		logger.debug("JWT Received: " + authTokenBearer);
+		if (authTokenBearer != null && authTokenBearer.startsWith("Bearer ")) {
+			jwtToken = authTokenBearer.substring(7);
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 			} catch (IllegalArgumentException e) {
@@ -50,7 +70,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				logger.debug("JWT Token has expired");
 			}
 		} else {
-			logger.warn("URL: " + getURL(request));
+			logger.warn("URL: " + JwtRequestFilter.getURL(request));
 			logger.warn("JWT Token does not begin with Bearer String");
 			// logger.warn(HttpUtils.getInstance().getFullURL(request));
 		}
@@ -74,11 +94,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 			}
 		}
-
-		chain.doFilter(request, response);
 	}
 
-	public static String getURL(HttpServletRequest req) {
+	private void processTokenSdk(HttpServletRequest request, String authTokenSdk) {
+		Secrets validToken = this.secretsService.findValidToken(authTokenSdk);
+		if (validToken != null) {
+			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(validToken.getUser().getEmail());
+			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+					userDetails, validToken, Arrays.asList("ROLE_SDK").stream()
+							.map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList()));
+			usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+			SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+		}
+	}
+
+	private static String getURL(HttpServletRequest req) {
 
 		String scheme = req.getScheme(); // http
 		String serverName = req.getServerName(); // hostname.com

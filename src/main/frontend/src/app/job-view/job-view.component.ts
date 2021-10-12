@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IconName, IconNamesEnum } from 'ngx-bootstrap-icons';
+import { ProgressbarType } from 'ngx-bootstrap/progressbar';
 import { JobUpdate } from '../dto';
 import { Job } from '../dto/Job';
 
@@ -68,13 +69,27 @@ export class JobViewComponent implements OnInit {
   }
 
   getPercent = (): number => {
-    if (this.job.updates.filter(o => o.percent).length == 0)
-      return 100;
     return Math.max.apply(Math, this.job.updates.map(o => o.percent));
   }
 
-  getUpdates = (): JobUpdate[] => {
-    return this.job.updates.filter(o => o.log);
+  getUpdates = (maxUpdates?: number): JobUpdate[] => {
+    return this.job.updates.filter(o => o.log)
+      .sort((a, b) => {
+        if (!a || !a.date || !b || !b.date) return 0;
+        return new Date(b.date).getTime() - new Date(a.date).getTime()
+      }).slice(0, maxUpdates);
+  }
+
+  hasUpdates = (): boolean => {
+    return this.job && this.job.updates && this.job.updates.filter(o => o.percent).length > 0;
+  }
+
+  progressBarType = (): ProgressbarType | undefined => {
+    if (this.hasUpdates()) {
+      return 'info';
+    } else {
+      return undefined;
+    }
   }
 
 }

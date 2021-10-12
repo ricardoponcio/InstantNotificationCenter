@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		"/", "/home","/pictureCheckCode","/include/**",
 		"/css/**","/icons/**","/images/**","/js/**","/layer/**",
 		"/*.js", "/*.css", "/assets/**", "/*.ico",
-		"/socket", "/socket/**",
+		"/socket", "/socket/**", "/sdk/**",
 		//
 
     };
