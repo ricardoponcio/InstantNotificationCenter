@@ -48,20 +48,22 @@ public class JobController extends AbstractController {
         }
     }
 
+    @EnableSdkAccess
     @PostMapping("/update/{jobId}")
     public ResponseEntity<Job> updateJob(@PathVariable("jobId") Long jobId, @RequestBody JobUpdateDTO jobUpdate) {
         Job job = jobService.addUpdate(jobId, jobUpdate);
         if (job == null)
-            return new ResponseEntity<Job>().message(this.messageService.get("job.id-nao-encontrato"));
+            return new ResponseEntity<Job>().status(false).message(this.messageService.get("job.id-nao-encontrato"));
         this.template.convertAndSend("/job/update", job);
         return new ResponseEntity<Job>().attach(job);
     }
 
+    @EnableSdkAccess
     @PostMapping("/finalize/{jobId}")
     public ResponseEntity<Job> finalizeJob(@PathVariable("jobId") Long jobId, @RequestBody JobFinalizeDTO jobFinalize) {
         Job job = jobService.finalizeJob(jobId, jobFinalize);
         if (job == null)
-            return new ResponseEntity<Job>().message(this.messageService.get("job.id-nao-encontrato"));
+            return new ResponseEntity<Job>().status(false).message(this.messageService.get("job.id-nao-encontrato"));
         this.template.convertAndSend("/job/update", job);
         return new ResponseEntity<Job>().attach(job);
     }
@@ -71,7 +73,7 @@ public class JobController extends AbstractController {
     public ResponseEntity<Job> createJob(@RequestBody JobCreateDTO jobCreate) {
         Job job = jobService.createJob(jobCreate);
         if (job == null)
-            return new ResponseEntity<Job>().message(this.messageService.get("error.notfound"));
+            return new ResponseEntity<Job>().status(false).message(this.messageService.get("error.notfound"));
         this.template.convertAndSend("/job/update", job);
         return new ResponseEntity<Job>().attach(job);
     }
