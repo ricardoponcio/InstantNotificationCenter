@@ -53,4 +53,8 @@ CREATE TABLE JOB_UPDATE (
 );
 
 INSERT INTO "user"(NAME, EMAIL, PASSWORD, ROLES)
-VALUES('Ricardo Poncio', 'ricardo.poncio@velsis.com.br', '123456', 'user, admin');
+VALUES('Ricardo Poncio', 'ricardo.poncio@velsis.com.br', '$2a$10$2KzXmErqT.IGdfFKvva6A.Ut8heZR5.ctveYkz09eQMSQhq.zjMFS', 'user, admin');
+-- Senha: 123456z
+
+insert into secrets (name, description, secret, "user")
+values('Test SSH', null, '5ab3afb3-5457-48cb-8460-1996cddb75cc', 1);
