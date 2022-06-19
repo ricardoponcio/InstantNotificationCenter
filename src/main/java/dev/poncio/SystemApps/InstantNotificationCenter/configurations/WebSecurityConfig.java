@@ -49,7 +49,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
 	public static final String[] ALLOWED_ORIGINS = {
-		"http://localhost:4200/", "http://localhost:4049/"
+		"http://localhost:4200/", "http://localhost:4049/",
+
+		"http://poncio.dev:4049/", "https://poncio.dev:4049/", "http://inc.poncio.dev/", "https://inc.poncio.dev/",
 	};
 
     @Autowired
