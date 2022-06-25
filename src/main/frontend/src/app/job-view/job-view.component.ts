@@ -81,7 +81,8 @@ export class JobViewComponent implements OnInit {
   }
 
   hasUpdates = (): boolean => {
-    return this.job && this.job.updates && this.job.updates.filter(o => o.percent).length > 0;
+    // return this.job && this.job.updates && this.job.updates.filter(o => o.percent).length > 0;
+    return this.job && this.job.updates && this.job.updates.length > 0;
   }
 
   progressBarType = (): ProgressbarType | undefined => {

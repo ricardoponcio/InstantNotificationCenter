@@ -34,7 +34,7 @@
         <div id="collapseBasic" [collapse]="job.collapseDetail" [isAnimated]="true" *ngIf="hasUpdates()">
             <div class="well well-lg card card-block card-header upper-margin">
                 <p *ngFor="let update of getUpdates(10)" class="text-break"><strong>{{ update.date | convertDate: 'short'
-                        }}:</strong> {{ update.log }}</p>
+                        }}{{ update.percent ? ' - (' + update.percent + '%)' : '' }}:</strong> {{ update.log }}</p>
                 <p *ngIf="getUpdates().length > 10">... {{ 'and-others' | translate }} {{ getUpdates().length - 10 }}</p>
             </div>
         </div>
