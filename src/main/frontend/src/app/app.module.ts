@@ -1,10 +1,10 @@
-import { registerLocaleData } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LOCALE_ID, NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { allIcons, NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
@@ -48,6 +48,8 @@ import { ConvertDatePipe } from './utils/pipe/convert-date.pipe';
     NgxBootstrapIconsModule.pick(allIcons),
     HttpClientModule,
     ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,

@@ -1,14 +1,13 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
-import { TranslateService } from '@ngx-translate/core';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
-
-import { AuthService } from './auth.service';
 import * as moment from 'moment';
-import { LangUtils } from '../utils/lang.utils';
+import { throwError } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { catchError } from 'rxjs/operators';
+import { LangUtils } from './../utils/lang.utils';
+import { AuthService } from './auth.service';
+
 
 @Injectable({
   providedIn: 'any'
@@ -17,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private iso8601 = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/;
 
-  constructor(public lang: LangUtils,
+  constructor(private readonly injector: Injector,
     private authService: AuthService,
     private router: Router) { }
 
@@ -25,9 +24,16 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler): Observable<HttpEvent<any>> {
     var cloned = req.clone();
 
-    cloned = cloned.clone({
-      headers: req.headers.set("Accept-Language", this.lang.transformLang())
-    });
+    try {
+      // Tenta injetar o langUtils
+      // Caso não dê é por que o TranslateService ta inicializando ainda, sem o clone o lang não é enviado e o default do back é usado
+      const langUtils = this.injector.get(LangUtils);
+      cloned = cloned.clone({
+        headers: req.headers.set("Accept-Language", langUtils.transformLang())
+      });
+    } catch {
+      // log without translation translation service is not yet available
+    }
 
     const idToken = this.authService.getToken();
     if (idToken) {
