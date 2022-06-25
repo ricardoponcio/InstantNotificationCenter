@@ -19,14 +19,14 @@ public class AuthUtil {
         return authUser == null ? null : (Secrets) authUser.getCredentials();
     }
 
-    public static Boolean isSdkRequest() {
+    public static boolean isSdkRequest() {
         UsernamePasswordAuthenticationToken authUser = AuthUtil.getContextAuth();
-        return authUser == null ? null : authUser.getAuthorities().stream().anyMatch(authority -> "ROLE_SDK".equals(authority.getAuthority()));
+        return authUser == null ? false : authUser.getAuthorities().stream().anyMatch(authority -> "ROLE_SDK".equals(authority.getAuthority()));
     }
 
     private static UsernamePasswordAuthenticationToken getContextAuth() {
         Authentication auth = (Authentication) SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null)
+        if (auth == null || !(auth instanceof UsernamePasswordAuthenticationToken))
             return null;
         return (UsernamePasswordAuthenticationToken) auth;
     }
