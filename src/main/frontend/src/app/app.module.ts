@@ -1,34 +1,28 @@
+import { registerLocaleData } from '@angular/common';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LOCALE_ID, NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import localePt from '@angular/common/locales/pt';
-import localeEn from '@angular/common/locales/en';
-import localeEs from '@angular/common/locales/es';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-
-import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateCacheModule, TranslateCacheService, TranslateCacheSettings } from 'ngx-translate-cache';
-import { HttpClient } from '@angular/common/http';
-
+import { allIcons, NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { JobViewComponent } from './job-view/job-view.component';
-import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
-import { LoadingComponent } from './utils/loading/loading.component';
+import { MomentPipe } from 'src/core/MomentPipe';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
-import { LogoutComponent } from './logout/logout.component';
+import { HomeComponent } from './home/home.component';
+import { JobViewComponent } from './job-view/job-view.component';
 import { LoginComponent } from './login/login.component';
-import { MomentPipe } from 'src/core/MomentPipe';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ConvertDatePipe } from './utils/pipe/convert-date.pipe';
-import { registerLocaleData } from '@angular/common';
+import { LogoutComponent } from './logout/logout.component';
 import { LangUtils } from './utils/lang.utils';
+import { LoadingComponent } from './utils/loading/loading.component';
+import { ConvertDatePipe } from './utils/pipe/convert-date.pipe';
+
+
 
 // registerLocaleData(localePt);
 // registerLocaleData(localeEn);
@@ -56,17 +50,11 @@ import { LangUtils } from './utils/lang.utils';
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    TranslateCacheModule.forRoot({
-      cacheService: {
-        provide: TranslateCacheService,
-        useFactory: TranslateCacheFactory,
-        deps: [TranslateService, TranslateCacheSettings]
-      }
+          provide: TranslateLoader,
+          useFactory: (createTranslateLoader),
+          deps: [HttpClient]
+      },
+      defaultLanguage: 'en'
     })
   ],
   providers: [
@@ -88,7 +76,7 @@ export class AppModule {
   constructor(private langUtils: LangUtils) {
     langUtils.langs()
       .forEach(lang => this.registerCulture(lang));
-  }  
+  }
 
   private registerCulture(culture: string) {
     if (!culture) {
@@ -107,10 +95,6 @@ export class AppModule {
 
 }
 
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
-}
-
-export function TranslateCacheFactory(translateService: TranslateService, translateCacheSettings: TranslateCacheSettings) {
-  return new TranslateCacheService(translateService, translateCacheSettings);
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
