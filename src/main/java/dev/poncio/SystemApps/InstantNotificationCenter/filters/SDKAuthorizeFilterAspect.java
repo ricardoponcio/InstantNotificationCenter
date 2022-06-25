@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import dev.poncio.SystemApps.InstantNotificationCenter.annotations.EnableSdkAccess;
 import dev.poncio.SystemApps.InstantNotificationCenter.exceptions.SDKNotAllowedException;
+import dev.poncio.SystemApps.InstantNotificationCenter.utils.AuthUtil;
 
 @Aspect
 @Component
@@ -26,7 +27,8 @@ public class SDKAuthorizeFilterAspect {
     public Object checkAccess(ProceedingJoinPoint pjp) throws Exception {
         Object retObject = null;
         Method method = getMethod(pjp);
-        if (AnnotationUtils.findAnnotation(method, EnableSdkAccess.class) != null) {
+
+        if (!AuthUtil.isSdkRequest() || AnnotationUtils.findAnnotation(method, EnableSdkAccess.class) != null) {
             try {
                 retObject = pjp.proceed();
             } catch (Throwable e) {
