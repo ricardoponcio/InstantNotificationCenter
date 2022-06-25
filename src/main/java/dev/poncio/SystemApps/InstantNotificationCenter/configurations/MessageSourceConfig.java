@@ -20,7 +20,7 @@ public class MessageSourceConfig {
         return messageSource;
     }
 
-    @Bean
+    @Bean("inclocaleResolver")
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver localResolver = new AcceptHeaderLocaleResolver();
         localResolver.setDefaultLocale(Locale.US);
