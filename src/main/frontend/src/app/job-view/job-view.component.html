@@ -12,9 +12,9 @@
             <p><b>Group:</b> {{ job.group.name }}</p>
         </ng-container>
         <div class="progress upper-margin" *ngIf="!job.finished">
-            <progressbar class="progress-striped active" [value]="hasUpdates() ? getPercent() : 100"
+            <progressbar class="progress-striped active" [value]="hasUpdates() && getPercent() ? getPercent() : 100"
                 [type]="progressBarType()">
-                <i>{{ hasUpdates() ? getPercent() + '%' : 'generic.indeterminate' | translate }}</i>
+                <i>{{ hasUpdates() && getPercent() ? getPercent() + '%' : 'generic.indeterminate' | translate }}</i>
             </progressbar>
         </div>
 
