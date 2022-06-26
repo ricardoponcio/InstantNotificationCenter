@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
       // Caso não dê é por que o TranslateService ta inicializando ainda, sem o clone o lang não é enviado e o default do back é usado
       const langUtils = this.injector.get(LangUtils);
       cloned = cloned.clone({
-        headers: req.headers.set("Accept-Language", langUtils.transformLang())
+        headers: req.headers.set("Accept-Language", langUtils.transformBrowserLang())
       });
     } catch {
       // log without translation translation service is not yet available

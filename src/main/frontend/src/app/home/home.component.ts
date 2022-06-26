@@ -34,7 +34,6 @@ export class HomeComponent implements OnInit {
           job.collapseDetail = true;
           return job;
         });
-        console.log(this.jobs);
         this.loading = false;
       }).catch(err => {
         console.log(err);
@@ -66,7 +65,7 @@ export class HomeComponent implements OnInit {
       var index = this.jobs.map(job => job.id).indexOf(jobMessage.id);
       if (index != -1) {
         if (jobMessage.status != this.jobs[index].status) {
-          jobMessage.collapseDetail = true;  
+          jobMessage.collapseDetail = true;
         } else {
           jobMessage.collapseDetail = this.jobs[index].collapseDetail;
         }

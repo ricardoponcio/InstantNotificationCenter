@@ -1,9 +1,18 @@
 {
     "select": "Selecione a linguagem",
-    "job": "Trabalho",
-    "jobs.running": "Trabalhos em Andamento",
-    "jobs.finished": "Trabalhos Finalizados",
-    "jobs.unfinished": "Trabalhos Não Finalizados",
+    "jobs": {
+      "job": "Trabalho",
+      "running": "Trabalhos em Andamento",
+      "finished": "Trabalhos Finalizados",
+      "unfinished": "Trabalhos Não Finalizados",
+      "show-log": "Mostrar Logs",
+      "status": {
+        "success": "Job finalizado com sucesso!",
+        "error": "Job finalizado com erro!",
+        "error-detail": "Job finalizado com erro! Motivo: {{ detail }}",
+        "expired": "O job expirou!"
+      }
+    },
     "login": {
         "login": "Login",
         "username": "Usuário",

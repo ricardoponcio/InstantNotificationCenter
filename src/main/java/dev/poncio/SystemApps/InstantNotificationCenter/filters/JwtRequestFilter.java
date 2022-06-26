@@ -2,6 +2,7 @@ package dev.poncio.SystemApps.InstantNotificationCenter.filters;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
@@ -18,12 +19,18 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import dev.poncio.SystemApps.InstantNotificationCenter.dto.SecretUseDTO;
+import dev.poncio.SystemApps.InstantNotificationCenter.entities.SecretUse;
 import dev.poncio.SystemApps.InstantNotificationCenter.entities.Secrets;
+import dev.poncio.SystemApps.InstantNotificationCenter.interfaces.RequestService;
 import dev.poncio.SystemApps.InstantNotificationCenter.services.SecretsService;
 import dev.poncio.SystemApps.InstantNotificationCenter.services.UserService;
+import dev.poncio.SystemApps.InstantNotificationCenter.utils.AuthUtil;
 import dev.poncio.SystemApps.InstantNotificationCenter.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -35,6 +42,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private SecretsService secretsService;
+
+	@Autowired
+	private RequestService requestService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -99,6 +109,23 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private void processTokenSdk(HttpServletRequest request, String authTokenSdk) {
 		Secrets validToken = this.secretsService.findValidToken(authTokenSdk);
 		if (validToken != null) {
+			try {
+				SecretUse secretUse = SecretUse.builder()
+						.ip(this.requestService.getClientIp(request))
+						.browser(this.requestService.getBrowserName(request))
+						.browserVersion(this.requestService.getBrowserVersion(request))
+						.operatingSystem(this.requestService.getOperatingSystemName(request))
+						.deviceType(this.requestService.getDeviceType(request))
+						.endpoint(request.getRequestURL().toString())
+						.secrets(validToken)
+						.date(new Date())
+						.build();
+				secretUse = this.secretsService.persistSecretUse(secretUse);
+				AuthUtil.get().setSecretUseDTO(new SecretUseDTO(secretUse.getId()));
+			} catch (Exception e) {
+				log.error("Fail on detect use of Secret", e);
+			}
+
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(validToken.getUser().getEmail());
 			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 					userDetails, validToken, Arrays.asList("ROLE_SDK").stream()

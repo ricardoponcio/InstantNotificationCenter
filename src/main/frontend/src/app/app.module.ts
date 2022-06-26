@@ -1,4 +1,4 @@
-import { CommonModule, registerLocaleData } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -22,7 +22,10 @@ import { LangUtils } from './utils/lang.utils';
 import { LoadingComponent } from './utils/loading/loading.component';
 import { ConvertDatePipe } from './utils/pipe/convert-date.pipe';
 
-
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { SecretsComponent } from './secrets/secrets.component';
 
 // registerLocaleData(localePt);
 // registerLocaleData(localeEn);
@@ -37,7 +40,8 @@ import { ConvertDatePipe } from './utils/pipe/convert-date.pipe';
     LogoutComponent,
     LoginComponent,
     MomentPipe,
-    ConvertDatePipe
+    ConvertDatePipe,
+    SecretsComponent
   ],
   imports: [
     BrowserModule,
@@ -50,11 +54,14 @@ import { ConvertDatePipe } from './utils/pipe/convert-date.pipe';
     ReactiveFormsModule,
     CommonModule,
     FormsModule,
+    ButtonsModule,
+    TooltipModule,
+    NgxDatatableModule,
     TranslateModule.forRoot({
       loader: {
-          provide: TranslateLoader,
-          useFactory: (createTranslateLoader),
-          deps: [HttpClient]
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
       },
       defaultLanguage: 'en'
     })
@@ -67,35 +74,13 @@ import { ConvertDatePipe } from './utils/pipe/convert-date.pipe';
       multi: true
     }, {
       provide: LOCALE_ID,
-      deps: [ LangUtils ],
+      deps: [LangUtils],
       useFactory: (langUtils: LangUtils) => langUtils.pureLang()
     }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-
-  constructor(private langUtils: LangUtils) {
-    langUtils.langs()
-      .forEach(lang => this.registerCulture(lang));
-  }
-
-  private registerCulture(culture: string) {
-    if (!culture) {
-      return;
-    }
-    const localeId = culture.substring(0, 2);
-    this.localeInitializer(localeId);
-  }
-
-  localeInitializer(localeId: string): Promise<any> {
-    return import(
-      /* webpackInclude: /(nb|sv)\.js$/ */
-      `@angular/common/locales/${localeId}.js`
-      ).then(module => registerLocaleData(module.default));
-  }
-
-}
+export class AppModule { }
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');

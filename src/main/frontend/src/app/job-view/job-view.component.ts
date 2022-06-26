@@ -54,10 +54,18 @@ export class JobViewComponent implements OnInit {
 
   getInfoAlert = () => {
     if (!this.job.finished) return '';
-    if (this.job.status == 'SUCCESS') return 'Job finished successfully!';
-    if (this.job.status == 'ERROR') return 'Job finished with an error! ' + (this.job.resultMessage ? 'Detail: ' + this.job.resultMessage : '');
-    if (this.job.status == 'EXPIRED') return 'Job has expired!';
+    if (this.job.status == 'SUCCESS') return 'jobs.status.success';
+    if (this.job.status == 'ERROR')
+      if (this.job.resultMessage) return 'jobs.status.error-detail'
+      else return 'jobs.status.error'
+    if (this.job.status == 'EXPIRED') return 'jobs.status.expired';
     return 'Status not recognized!';
+  }
+
+  getParametersTranslation = () => {
+    return {
+      detail: this.job.resultMessage
+    };
   }
 
   getIconState = (): IconName => {

@@ -2,7 +2,7 @@
     <h5 class="card-header position-relative">
         {{ job.name }}
         <p class="position-absolute top-50 end-0 translate-middle-y w-50 pe-2 text-end text-truncate fs-6">
-            {{ getInfoAlert() }}
+            {{ getInfoAlert() | translate: getParametersTranslation() }}
             <i-bs [style.color]="getHex()" [name]="getIconState()" class="ps-2"></i-bs>
         </p>
     </h5>
@@ -22,7 +22,7 @@
             <div class="col col-sm-2">
                 <button type="button" class="btn btn-primary w-100 mw-100 text-truncate"
                     (click)="job.collapseDetail=!job.collapseDetail" [attr.aria-expanded]="!job.collapseDetail"
-                    aria-controls="collapseBasic" [disabled]="!hasUpdates()">Show log
+                    aria-controls="collapseBasic" [disabled]="!hasUpdates()">{{ 'jobs.show-log' | translate }}
                 </button>
             </div>
             <div class="col position-relative">
@@ -35,7 +35,7 @@
             <div class="well well-lg card card-block card-header upper-margin">
                 <p *ngFor="let update of getUpdates(10)" class="text-break"><strong>{{ update.date | convertDate: 'short'
                         }}{{ update.percent ? ' - (' + update.percent + '%)' : '' }}:</strong> {{ update.log }}</p>
-                <p *ngIf="getUpdates().length > 10">... {{ 'and-others' | translate }} {{ getUpdates().length - 10 }}</p>
+                <p *ngIf="getUpdates().length > 10">... {{ 'generic.and-others' | translate }} {{ getUpdates().length - 10 }}</p>
             </div>
         </div>
     </div>

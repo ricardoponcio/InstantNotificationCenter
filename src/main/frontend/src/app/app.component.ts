@@ -1,24 +1,31 @@
-import { Component } from '@angular/core';
+import { StoreUtils } from './utils/store.utils';
+import { Component, OnInit } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LangUtils } from './utils/lang.utils';
+import { registerLocaleData } from '@angular/common';
+import { locale } from 'moment';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'frontend';
+  selectedLanguage !: string;
 
   public showOverlay = true;
 
   constructor(private router: Router,
     public translate: TranslateService,
     private langUtils: LangUtils,
+    private storeUtils: StoreUtils,
     public authService: AuthService) {
     langUtils.initialize();
+
+    this.selectedLanguage = this.translate.currentLang;
 
     router.events.forEach((event: any) => {
       if (event instanceof NavigationStart) {
@@ -37,6 +44,9 @@ export class AppComponent {
       }
     });
   }
+  ngOnInit(): void {
+    this.langUtils.langs().map(lang => this.langUtils.transformLang(lang)).forEach(lang => this.registerCulture(lang));
+  }
 
   langFullName = (lang: string) => {
     if (lang == 'es')
@@ -50,6 +60,30 @@ export class AppComponent {
 
   isLoggedIn = () => {
     return this.authService.isLoggedIn();
+  }
+
+  private registerCulture(culture: string) {
+    if (!culture) {
+      return;
+    }
+
+    // Eg.: 'en-US', try full name first
+    if (culture.length > 2)
+      this.localeInitializer(culture);
+
+    // Eg.: 'en-US', now try just with en
+    const localeId = culture.substring(0, 2);
+    this.localeInitializer(localeId);
+  }
+
+  private localeInitializer(localeId: string): Promise<any> {
+    return import(`../../node_modules/@angular/common/locales/${localeId}.js`)
+    .then(module => registerLocaleData(module.default)).catch(() => { /* ignore... */ });
+  }
+
+  changeLang = (lang: string) => {
+    this.storeUtils.setLocal('current-lang', lang);
+    this.translate.use(lang);
   }
 
 }

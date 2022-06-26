@@ -1,3 +1,4 @@
+import { SecretsComponent } from './secrets/secrets.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuardService } from './auth/auth-guard.service';
@@ -7,6 +8,7 @@ import { LogoutComponent } from './logout/logout.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [ AuthGuardService ] },
+  { path: 'secrets', component: SecretsComponent, canActivate: [ AuthGuardService ] },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
 

@@ -1,9 +1,18 @@
 {
     "select": "Select language",
-    "job": "Job",
-    "jobs.running": "Running Jobs",
-    "jobs.finished": "Finished Jobs",
-    "jobs.unfinished": "Unfinished Jobs",
+    "jobs": {
+      "job": "Job",
+      "running": "Running Jobs",
+      "finished": "Finished Jobs",
+      "unfinished": "Unfinished Jobs",
+      "show-log": "Show Logs",
+      "status": {
+        "success": "Job finished successfully!",
+        "error": "Job finished with an error!",
+        "error-detail": "Job finished with an error! Detail: {{ detail }}",
+        "expired": "Job has expired!"
+      }
+    },
     "login": {
         "login": "Login",
         "username": "Username",

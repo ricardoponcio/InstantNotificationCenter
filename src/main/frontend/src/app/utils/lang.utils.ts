@@ -1,37 +1,47 @@
+import { StoreUtils } from './store.utils';
 import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class LangUtils {
 
-    constructor(private translateService: TranslateService) { }
+  constructor(private translateService: TranslateService,
+    private storeUtils: StoreUtils) { }
 
-    transformLang = (): string => {
-        const browserLang = this.pureLang();
-        if (browserLang) {
-            if (browserLang == 'en')
-                return 'en-US';
-            else if (browserLang == 'pt')
-                return 'pt-BR';
-        }
-        return browserLang;
-    }
+  transformBrowserLang = (): string => {
+    const browserLang = this.pureLang();
+    return this.transformLang(browserLang);
+  }
 
-    pureLang = () => {
-        return this.translateService.currentLang || this.translateService.defaultLang;
-    }
+  transformLang = (lang: string): string => {
+    if (lang == 'en')
+      return 'en-US';
+    else if (lang == 'pt')
+      return 'pt-BR';
+    return lang;
+  }
 
-    initialize = () => {
-        this.translateService.addLangs(['en', 'es', 'pt']);
-        this.translateService.setDefaultLang('en');
-        const browserLang = this.translateService.getBrowserLang();
-        this.translateService.use(browserLang.match(/en|es|pt/) ? browserLang : 'en');
-    }
+  pureLang = () => {
+    return this.translateService.currentLang || this.translateService.defaultLang;
+  }
 
-    langs = (): string[] => {
-        return this.translateService.langs;
-    }
+  initialize = () => {
+    this.translateService.addLangs(['en', 'es', 'pt']);
+    this.translateService.setDefaultLang('en');
+
+    const browserLang = this.translateService.getBrowserLang();
+    const storageLang = this.storeUtils.getLocal('current-lang');
+    this.useLanguage(storageLang ? storageLang : browserLang);
+  }
+
+  private useLanguage = (language: string) => {
+    this.translateService.use(language.match(/en|es|pt/) ? language : 'en');
+  }
+
+  langs = (): string[] => {
+    return this.translateService.langs;
+  }
 
 }

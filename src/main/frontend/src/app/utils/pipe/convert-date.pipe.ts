@@ -9,9 +9,9 @@ export class ConvertDatePipe implements PipeTransform {
     constructor(public lang: LangUtils, private _translateService: TranslateService) { }
 
     transform(value: any, pattern: string = 'mediumDate'): any {
-        let resultDate = this.transformDate(value, pattern, this.lang.transformLang());
+        let resultDate = this.transformDate(value, pattern, this.lang.transformBrowserLang());
         this._translateService.onLangChange.subscribe((event: LangChangeEvent) => {
-            resultDate = this.transformDate(value, pattern, this.lang.transformLang());
+            resultDate = this.transformDate(value, pattern, this.lang.transformBrowserLang());
         });
         return resultDate;
     }
