@@ -8,7 +8,7 @@ InstantNotificationCenter is a real-time monitoring tool for tracking the execut
 - **Detailed Execution Data:** Access logs, progress percentages, and job metadata.
 - **Modern Web Frontend:** Built with Angular 12 for a responsive user experience.
 - **Easy Integration:** Backend can receive job updates from your applications.
-- **Extensible SDK:** Use the [InstantNotificationSdk](https://github.com/ricardoponcio/InstantNotificationSdk/blob/master/README.md) to send job updates from Java apps.
+- **Extensible SDK:** Use the [InstantNotificationSdk](https://github.com/ricardoponcio/InstantNotificationSdk) to send job updates from Java apps.
 
 ## Project Structure
 
